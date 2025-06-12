@@ -121,7 +121,21 @@ function iniciarJogo() {
     return;
   }
 
-  estado.bombas = gerarBombas(parseInt(elementos.bombasSelect.value));
+  const numBombas = parseInt(elementos.bombasSelect.value);
+  
+  // Define o multiplicador base de acordo com o número de bombas
+  if (numBombas === 3) {
+    config.multiplicadorBase = 0.00;
+    config.incrementoPorAcerto = 0.30;
+  } else if (numBombas === 5) {
+    config.multiplicadorBase = 0.00;
+    config.incrementoPorAcerto = 0.50;
+  } else if (numBombas === 10) {
+    config.multiplicadorBase = 0.00;
+    config.incrementoPorAcerto = 1.00;
+  }
+
+  estado.bombas = gerarBombas(numBombas);
   estado.clicadas = [];
   estado.multiplicador = config.multiplicadorBase;
   estado.lucro = 0;
@@ -156,7 +170,7 @@ function retirar() {
   elementos.retirarBtn.disabled = true;
   elementos.iniciarBtn.disabled = false;
   
-  // Adiciona gemas
+  // Adiciona gemas (10% do lucro)
   const gemasGanhas = Math.floor(estado.lucro * 0.1);
   progresso.gemas += gemasGanhas;
   
@@ -166,7 +180,7 @@ function retirar() {
   
   // Feedback
   if (somAtivo) sons.retirada.play();
-  mostrarResultado(`Você retirou R$${valorGanho}! (+${gemasGanhas} gemas)`, "vitoria");
+  mostrarResultado(`Você retirou R$${valorGanho.toFixed(2)}! (+${gemasGanhas} gemas)`, "vitoria");
   adicionarAoHistorico(true);
   atualizarUI();
 }
@@ -234,7 +248,7 @@ function clicarCarta(index, elemento) {
       mostrarFeedback("MINA DOURADA! +5x multiplicador", "sucesso");
     } else {
       imagem.src = "moeda_padrao.png";
-      estado.multiplicador += config.incrementoPorAcerto; // Incremento normal
+      estado.multiplicador += config.incrementoPorAcerto; // Usa o incremento definido
     }
     
     imagem.style.display = "block";
