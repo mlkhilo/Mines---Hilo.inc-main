@@ -48,5 +48,14 @@
   "skin_applied": "Skin ",
   "applied": " applied!",
   "money_added": "+$",
-  "added": " added!"
+  "added": " added!",
+"play_title": "Play - Mines Casino",
+"current_balance": "Current Balance:",
+"current_gems": "Money:",
+"bet_value": "Bet Amount:",
+"num_mines": "Number of mines:",
+"start_play": "Start",
+"collect": "Collect",
+"reset": "Reset",
+"history": "History"
 }

@@ -48,5 +48,15 @@
   "skin_applied": "Skin ",
   "applied": " aplicada!",
   "money_added": "+R$",
-  "added": " adicionados!"
+  "added": " adicionados!",
+  
+"play_title": "Jogar - Mines Cassino",
+"current_balance": "Saldo Atual:",
+"current_gems": "Dinheiro:",
+"bet_value": "Valor da aposta:",
+"num_mines": "Quantidade de minas:",
+"start_play": "Começar",
+"collect": "Coletar",
+"reset": "Reiniciar",
+"history": "Histórico"
 }

@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mines Cassino</title>
+  <title data-i18n="play_title">Jogar - Mines Cassino</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css" />
+  <script src="lang.js"></script>
 </head>
 <body>
   <!-- Barra Superior -->
   <div class="header">
     <button class="btn-voltar" onclick="window.location.href='index.html'">
-      <i class="fas fa-arrow-left"></i> Menu
+      <i class="fas fa-arrow-left"></i> <span data-i18n="back">Voltar</span>
     </button>
-    <span class="logo">💎 MINES</span>
+    <span class="logo">💎 <span data-i18n="game_title">MINES</span></span>
     <div class="moedas">
       <i class="fas fa-gem" style="color: #4fc3f7;"></i>
       <span id="saldo-gemas">0</span>
@@ -25,20 +26,20 @@
   </div>
 
   <div class="container-game">
-    <h1 class="game-title">MINES <span class="diamond">💎</span></h1>
+    <h1 class="game-title"><span data-i18n="game_title">MINES</span> <span class="diamond">💎</span></h1>
 
     <!-- Estatísticas -->
     <div class="stats-container">
       <div class="stat-box">
-        <span class="stat-label">Saldo:</span>
+        <span class="stat-label" data-i18n="current_balance">Saldo:</span>
         <span class="stat-value" id="saldo">100.00</span>
       </div>
       <div class="stat-box">
-        <span class="stat-label">Lucro:</span>
+        <span class="stat-label" data-i18n="current_gems">Gemas:</span>
         <span class="stat-value" id="lucro">0.00</span>
       </div>
       <div class="stat-box highlight">
-        <span class="stat-label">Multiplicador:</span>
+        <span class="stat-label" data-i18n="bet_value">Multiplicador:</span>
         <span class="stat-value" id="multiplicador">1.00x</span>
       </div>
     </div>
@@ -46,7 +47,7 @@
     <!-- Controles -->
     <div class="controls-game">
       <div class="control-group">
-        <label for="bombas"><i class="fas fa-bomb"></i> Bombas:</label>
+        <label for="bombas"><i class="fas fa-bomb"></i> <span data-i18n="num_mines">Minas:</span></label>
         <select id="bombas">
           <option value="3">3</option>
           <option value="5">5</option>
@@ -55,16 +56,16 @@
       </div>
 
       <div class="control-group">
-        <label for="aposta"><i class="fas fa-coins"></i> Aposta:</label>
+        <label for="aposta"><i class="fas fa-coins"></i> <span data-i18n="bet_value">Aposta:</span></label>
         <input type="number" id="aposta" min="1" value="10" />
       </div>
 
       <div class="buttons-game">
         <button id="iniciar" class="btn-start">
-          <i class="fas fa-play"></i> Iniciar
+          <i class="fas fa-play"></i> <span data-i18n="start_play">Iniciar</span>
         </button>
         <button id="retirar" class="btn-cashout" disabled>
-          <i class="fas fa-hand-holding-usd"></i> Retirar
+          <i class="fas fa-hand-holding-usd"></i> <span data-i18n="collect">Retirar</span>
         </button>
       </div>
     </div>
@@ -74,8 +75,8 @@
 
     <!-- Histórico -->
     <div class="history-header">
-      <h3><i class="fas fa-history"></i> Histórico</h3>
-      <button id="limparHistorico"><i class="fas fa-trash"></i></button>
+      <h3><i class="fas fa-history"></i> <span data-i18n="history">Histórico</span></h3>
+      <button id="limparHistorico"><i class="fas fa-trash"></i> <span data-i18n="reset">Limpar</span></button>
     </div>
     <div id="historico" class="historico"></div>
 
@@ -129,7 +130,7 @@
         atualizarUI();
       });
     });
-  
+
     function transitionToPage(url) {
       document.body.classList.add('fade-out');
       setTimeout(() => window.location.href = url, 500);
