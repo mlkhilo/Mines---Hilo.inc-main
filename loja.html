@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="shop">Loja</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="lang.js"></script>
+</head>
+<body>
+  <!-- Barra Superior -->
+  <div class="header">
+    <button class="btn-voltar" onclick="transitionToPage('index.html')">
+      <i class="fas fa-arrow-left"></i> <span data-i18n="back">Voltar</span>
+    </button>
+    <span class="logo"><i class="fas fa-shopping-cart"></i> <span data-i18n="shop">Loja</span></span>
+    <div class="moedas">
+      <i class="fas fa-gem" style="color: #4fc3f7;"></i>
+      <span id="saldo-gemas">0</span>
+    </div>
+  </div>
+
+  <div class="container-loja">
+    <!-- Seção de Skins -->
+    <section class="secao-loja">
+      <h2><i class="fas fa-chess-board"></i> <span data-i18n="skins_section">Skins de Tabuleiro</span></h2>
+      <div class="itens-loja">
+        <!-- Skin Padrão -->
+        <div class="item-loja" data-id="classico" data-preco="0" data-comprado="true">
+          <div class="skin-preview classico"></div>
+          <h3 data-i18n="skin_classic">Clássico</h3>
+          <div class="preco" data-i18n="free">Gratuito</div>
+          <button class="btn-usar" data-id="classico" data-i18n="using">Usando</button>
+        </div>
+        <!-- Skin Neon -->
+        <div class="item-loja" data-id="neon" data-preco="500">
+          <div class="skin-preview neon"></div>
+          <h3 data-i18n="skin_neon">Neon</h3>
+          <div class="preco"><span data-i18n="price_gem">500</span> <i class="fas fa-gem"></i></div>
+          <button class="btn-comprar" data-i18n="buy">Comprar</button>
+        </div>
+        <!-- Skin Espaço -->
+        <div class="item-loja" data-id="espaco" data-preco="750">
+          <div class="skin-preview espaco"></div>
+          <h3 data-i18n="skin_space">Espaço</h3>
+          <div class="preco"><span data-i18n="price_gem">750</span> <i class="fas fa-gem"></i></div>
+          <button class="btn-comprar" data-i18n="buy">Comprar</button>
+        </div>
+        <!-- Skin Retrô -->
+        <div class="item-loja" data-id="retro" data-preco="1000">
+          <div class="skin-preview retro"></div>
+          <h3 data-i18n="skin_retro">Retrô</h3>
+          <div class="preco"><span data-i18n="price_gem">1000</span> <i class="fas fa-gem"></i></div>
+          <button class="btn-comprar" data-i18n="buy">Comprar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção de Power-ups -->
+    <section class="secao-loja">
+      <h2><i class="fas fa-bolt"></i> <span data-i18n="powerups_section">Power-ups</span></h2>
+      <div class="itens-loja">
+        <!-- Mina Dourada -->
+        <div class="item-loja" data-id="mina-dourada" data-preco="300">
+          <div class="powerup-icon gold-mine">
+            <i class="fas fa-coins"></i>
+          </div>
+          <h3 data-i18n="gold_mine">Mina Dourada</h3>
+          <p data-i18n="gold_mine_desc">Chance de 5% de ativar multiplicador 5x</p>
+          <div class="preco"><span data-i18n="price_gem">300</span> <i class="fas fa-gem"></i></div>
+          <button class="btn-comprar" data-i18n="buy">Comprar</button>
+        </div>
+        <!-- Vida Extra -->
+        <div class="item-loja" data-id="vida-extra" data-preco="200">
+          <div class="powerup-icon extra-life">
+            <i class="fas fa-heart"></i>
+            <span class="qtd-vidas" id="qtd-vidas">0</span>
+          </div>
+          <h3 data-i18n="extra_life">Vida Extra</h3>
+          <p data-i18n="extra_life_desc">Continua após 1 bomba</p>
+          <div class="preco"><span data-i18n="price_gem">200</span> <i class="fas fa-gem"></i></div>
+          <button class="btn-comprar" data-i18n="buy">Comprar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nova Seção de Power-ups -->
+    <section class="secao-loja">
+      <h2><i class="fas fa-eye"></i> <span data-i18n="new_powerups_section">Novos Power-ups</span></h2>
+      <div class="itens-loja">
+        <!-- Visão de Águia -->
+        <div class="item-loja" data-id="visao-aguia" data-preco="400">
+          <div class="powerup-icon eagle-eye">
+            <i class="fas fa-eye"></i>
+            <span class="qtd-vidas" id="qtd-visao">0</span>
+          </div>
+          <h3 data-i18n="eagle_eye">Visão de Águia</h3>
+          <p data-i18n="eagle_eye_desc">Revela bombas por 3 segundos (uso único)</p>
+          <div class="preco"><span data-i18n="price_gem">400</span> <i class="fas fa-gem"></i></div>
+          <button class="btn-comprar" data-i18n="buy">Comprar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção de Comprar Dinheiro -->
+    <section class="secao-loja">
+      <h2><i class="fas fa-money-bill-wave"></i> <span data-i18n="buy_money_section">Comprar Dinheiro</span></h2>
+      <div class="itens-loja">
+        <!-- Pacote Pequeno -->
+        <div class="item-loja" data-id="dinheiro-100" data-preco="20">
+          <div class="powerup-icon money">
+            <i class="fas fa-money-bill-wave"></i>
+            <span class="qtd-dinheiro">100</span>
+          </div>
+          <h3 data-i18n="money_100">R$ 100,00</h3>
+          <div class="preco"><span data-i18n="price_gem">20</span> <i class="fas fa-gem"></i></div>
+          <button class="btn-comprar" data-i18n="buy">Comprar</button>
+        </div>
+        <!-- Pacote Médio -->
+        <div class="item-loja" data-id="dinheiro-1000" data-preco="180">
+          <div class="powerup-icon money">
+            <i class="fas fa-money-bill-wave"></i>
+            <span class="qtd-dinheiro">1000</span>
+          </div>
+          <h3 data-i18n="money_1000">R$ 1.000,00</h3>
+          <div class="preco"><span data-i18n="price_gem">180</span> <i class="fas fa-gem"></i></div>
+          <button class="btn-comprar" data-i18n="buy">Comprar</button>
+        </div>
+        <!-- Pacote Grande -->
+        <div class="item-loja" data-id="dinheiro-10000" data-preco="1000">
+          <div class="powerup-icon money">
+            <i class="fas fa-money-bill-wave"></i>
+            <span class="qtd-dinheiro">10000</span>
+          </div>
+          <h3 data-i18n="money_10000">R$ 10.000,00</h3>
+          <div class="preco"><span data-i18n="price_gem">1000</span> <i class="fas fa-gem"></i></div>
+          <button class="btn-comprar" data-i18n="buy">Comprar</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Feedback de Compra -->
+  <div id="feedbackCompra" class="feedback-compra"></div>
+
+  <script src="loja.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await setLangPage();
+      atualizarLoja();
+      
+      // Configura eventos dos botões de voltar
+      document.querySelectorAll('.btn-voltar').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          transitionToPage('index.html');
+        });
+      });
+      
+      // Listener para mudanças de idioma
+      window.addEventListener('languageChanged', async () => {
+        await setLangPage();
+        atualizarLoja();
+      });
+    });
+  
+    function transitionToPage(url) {
+      document.body.classList.add('fade-out');
+      setTimeout(() => window.location.href = url, 300);
+    }
+  </script>
+</body>
+</html>

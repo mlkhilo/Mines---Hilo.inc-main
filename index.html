@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="title">Menu - Mines Cassino</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preload" href="hilo.png" as="image">
+  <link rel="preload" href="mines.png" as="image">
+  <script src="lang.js"></script>
+</head>
+<body>
+  
+  <script>
+  // Loading screen animation
+  document.addEventListener('DOMContentLoaded', function() {
+    const loadingScreen = document.getElementById('loading-screen');
+    const progressFill = document.getElementById('progress-fill');
+    setTimeout(() => {
+      progressFill.style.width = '100%';
+      setTimeout(() => {
+        loadingScreen.style.opacity = '0';
+        setTimeout(() => {
+          loadingScreen.style.display = 'none';
+        }, 500);
+      }, 3000);
+    }, 50);
+  });
+  </script>
+  
+  <div id="loading-screen">
+    <img src="hilo.png" alt="Hilo Inc" class="logo-hilo">
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+      <img src="mines.png" alt="Mines" class="logo-mines">
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Barra de Navegação Superior -->
+  <div class="header">
+    <span class="logo" data-i18n="game_title">💎 Mines Cassino</span>
+    <span class="saldo"><span data-i18n="balance">💰 R$ 1.000,00</span> | <i class="fas fa-gem" style="color: #4fc3f7;"></i> <span id="gemas-menu">0</span></span>
+  </div>
+
+  <!-- Container Principal -->
+  <div class="container">
+    <h1 class="titulo-brilhante" data-i18n="game_title">💎 Mines Cassino</h1>
+    <p data-i18n="choose_play">Escolha sua jogada:</p>
+
+    <!-- Botões do Menu -->
+    <div class="botoes-menu">
+      <button class="btn-jogar" onclick="transitionToPage('mines.html')">
+        <i class="fas fa-bomb"></i> <span data-i18n="start_game">Iniciar Jogo</span>
+      </button>
+      <button class="btn-loja" onclick="transitionToPage('loja.html')">
+        <i class="fas fa-shopping-cart"></i> <span data-i18n="shop">Loja</span>
+      </button>
+      <!-- Botão de Configurações -->
+      <button class="btn-config" onclick="transitionToPage('config.html')" id="botaoConfig">
+        <i class="fas fa-cog"></i> <span data-i18n="settings">Configurações</span>
+      </button>
+      <button class="btn-ranking" onclick="mostrarRanking()">
+        <i class="fas fa-trophy"></i> <span data-i18n="ranking">Ranking</span>
+      </button>
+      <button class="btn-creditos" onclick="abrirModal()">
+        <i class="fas fa-info-circle"></i> <span data-i18n="credits">Créditos</span>
+      </button>
+    </div>
+
+    <!-- Modal de Créditos -->
+    <div id="modalCreditos" class="modal">
+      <div class="modal-conteudo">
+        <span class="fechar" onclick="fecharModal()">&times;</span>
+        <h2 data-i18n="modal_credits_title">Créditos</h2>
+        <p data-i18n="modal_credits_content">Criado por Hilo.inc © 2025<br>Inspirado em jogos de cassino Mines.</p>
+      </div>
+    </div>
+
+    <!-- Ranking -->
+    <div id="ranking" class="ranking">
+      <h3><i class="fas fa-trophy"></i> <span data-i18n="ranking_title">Melhores Jogadores</span></h3>
+      <ol id="listaRanking">
+        <li data-i18n="player1">Jogador 1 - R$ 5.000</li>
+        <li data-i18n="player2">Jogador 2 - R$ 3.200</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    // Transição entre páginas
+    function transitionToPage(url) {
+      document.body.classList.add('fade-out');
+      setTimeout(() => window.location.href = url, 500);
+    }
+  
+    // Atualiza gemas do menu
+    function atualizarGemasMenu() {
+      const progresso = JSON.parse(localStorage.getItem('progresso')) || { gemas: 0 };
+      document.getElementById('gemas-menu').textContent = progresso.gemas;
+    }
+  
+    // Inicializa traduções e preferências ao carregar
+    window.onload = async () => {
+      await setLangPage();
+      atualizarGemasMenu();
+      
+      // Listener para mudanças de idioma
+      window.addEventListener('languageChanged', async () => {
+        await setLangPage();
+        atualizarGemasMenu();
+      });
+    };
+  
+    // Modal de Créditos
+    function abrirModal() {
+      document.getElementById("modalCreditos").style.display = "block";
+    }
+    
+    function fecharModal() {
+      document.getElementById("modalCreditos").style.display = "none";
+    }
+  
+    // Ranking (simulado)
+    function mostrarRanking() {
+      const ranking = document.getElementById("ranking");
+      ranking.style.display = ranking.style.display === "block" ? "none" : "block";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="settings_header">CONFIGURAÇÕES</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="lang.js"></script>
+</head>
+<body>
+  <div class="header">
+    <button class="btn-voltar" onclick="transitionToPage('index.html')">
+      <i class="fas fa-arrow-left"></i> <span data-i18n="back">Voltar</span>
+    </button>
+    <span class="logo"><i class="fas fa-cog"></i> <span data-i18n="settings_header">CONFIGURAÇÕES</span></span>
+  </div>
+  <div class="container-config">
+    <h2><i class="fas fa-language"></i> <span data-i18n="language">Idioma</span></h2>
+    <div class="idioma-selector">
+      <label for="select-idioma" data-i18n="choose_language">Escolha o idioma:</label>
+      <select id="select-idioma">
+        <option value="pt" data-i18n="pt_br">Português (BR)</option>
+        <option value="en" data-i18n="en_us">English (US)</option>
+      </select>
+    </div>
+  </div>
+  <script>
+    function transitionToPage(url) {
+      document.body.classList.add('fade-out');
+      setTimeout(() => window.location.href = url, 300);
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const select = document.getElementById('select-idioma');
+      select.value = localStorage.getItem('idioma') || 'pt';
+      
+      select.addEventListener('change', () => {
+        localStorage.setItem('idioma', select.value);
+        window.dispatchEvent(new Event('languageChanged'));
+      });
+    });
+  </script>
+</body>
+</html>
