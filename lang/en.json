@@ -8,7 +8,7 @@
   "ranking": "Ranking",
   "credits": "Credits",
   "modal_credits_title": "Credits",
-  "modal_credits_content": "Created by Hilo.inc © 2025<br>Inspired by Mines casino games.",
+  "modal_credits_content": "Created by Hilo.inc © 2025 Inspired by Mines casino games.",
   "ranking_title": "Best Players",
   "player1": "Player 1 - $5,000",
   "player2": "Player 2 - $3,200",
@@ -57,5 +57,30 @@
 "start_play": "Start",
 "collect": "Collect",
 "reset": "Reset",
-"history": "History"
+"history": "History",
+
+
+  
+  "map_title": "Map - Casino of the Deep",
+  "fase1_title": "First Bet",
+  "fase1_desc": "Collect coins and avoid bombs! A small field with few mines... Perfect to test your luck.",
+  "fase2_title": "Coin Hall",
+  "fase2_desc": "Collect 5 coins in an expanded field. More space, but also more hidden traps.",
+  "fase3_title": "Danger Zone",
+  "fase3_desc": "The mines are getting smarter. Can you find the safe path?",
+  "boss_title": "Final Challenge",
+  "boss_desc": "All or nothing. Prove you're the master of fortune.",
+  "best_score": "Best score: {0}/{1}",
+  "play_button": "Play",
+  "back_button": "Back",
+
+
+"victory_title": "You won!",
+"victory_message": "Bet completed successfully.",
+"victory_button_map": "Back to Map",
+"victory_button_next": "Next Level",
+"defeat_title": "You lost!",
+"defeat_message": "The casino won this time...",
+"defeat_button_retry": "Try again",
+"defeat_button_map": "Back to Map"
 }

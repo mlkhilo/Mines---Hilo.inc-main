@@ -489,6 +489,9 @@ body.fade-out {
   justify-content: center;
   font-size: 24px;
   position: relative;
+  background-size: cover;
+  background-position: center;
+  position: relative;
 }
 
 .powerup-icon.gold-mine {
@@ -793,7 +796,8 @@ body.skin-retro .carta {
   }
 }
 
-/* Botão Visão de Águia */
+
+/* Botão Visão de Águia Flutuante */
 .btn-visao-aguia {
   position: fixed;
   bottom: 20px;
@@ -801,7 +805,7 @@ body.skin-retro .carta {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4fc3f7, #2962ff);
+  background-color: #2962ff; /* Cor de fundo padrão */
   color: white;
   border: none;
   font-size: 20px;
@@ -811,17 +815,23 @@ body.skin-retro .carta {
   display: none; /* Inicia escondido */
   justify-content: center;
   align-items: center;
-  transition: all 0.3s;
+  overflow: hidden; /* Para a imagem não vazar */
+  padding: 0; /* Remove padding padrão */
 }
 
-.btn-visao-aguia:hover {
-  transform: scale(1.1);
+/* Imagem da águia no botão */
+.btn-visao-aguia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.btn-visao-aguia:active {
-  transform: scale(0.95);
+/* Ícone de olho (será substituído) */
+.btn-visao-aguia i {
+  display: none;
 }
 
+/* Contador */
 .btn-visao-aguia::after {
   content: attr(data-count);
   position: absolute;
@@ -836,7 +846,47 @@ body.skin-retro .carta {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 2;
 }
+
+.btn-visao-aguia:hover {
+  transform: scale(1.1);
+}
+
+.btn-visao-aguia:active {
+  transform: scale(0.95);
+}
+
+
+/* Efeito de brilho ao usar o power-up */
+@keyframes aguia-brilho {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.5); }
+  100% { filter: brightness(1); }
+}
+
+/* Efeito pulsante na loja */
+.powerup-icon.eagle-eye:hover {
+  animation: pulse 0.5s infinite alternate;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.05); }
+}
+
+/* Efeito ao ativar */
+.btn-visao-aguia.ativo {
+  animation: brilho 0.3s 3;
+}
+
+@keyframes brilho {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.3); }
+  100% { filter: brightness(1); }
+}
+
+
 
 /* Feedback flutuante */
 .feedback-flutuante {
@@ -888,6 +938,23 @@ body.skin-retro .carta {
 .powerup-icon.money {
   background: linear-gradient(135deg, #2ecc71, #27ae60);
   color: #fff;
+}
+
+
+.powerup-icon i {
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 0 5px rgba(0,0,0,0.7);
+}
+
+.powerup-icon.eagle-eye {
+  
+  background-size: cover;
+}
+
+.qtd-vidas, .qtd-visao {
+  /* Mantenha as propriedades existentes */
+  z-index: 3;
 }
 
 .qtd-dinheiro {

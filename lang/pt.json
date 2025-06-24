@@ -8,7 +8,7 @@
   "ranking": "Ranking",
   "credits": "Créditos",
   "modal_credits_title": "Créditos",
-  "modal_credits_content": "Criado por Hilo.inc © 2025<br>Inspirado em jogos de cassino Mines.",
+  "modal_credits_content": "Criado por Hilo.inc © 2025 Inspirado em jogos de cassino Mines.",
   "ranking_title": "Melhores Jogadores",
   "player1": "Jogador 1 - R$ 5.000",
   "player2": "Jogador 2 - R$ 3.200",
@@ -58,5 +58,29 @@
 "start_play": "Começar",
 "collect": "Coletar",
 "reset": "Reiniciar",
-"history": "Histórico"
+"history": "Histórico",
+
+
+"map_title": "Mapa - Terras da Sorte",
+"fase1_title": "Primeira Aposta",
+"fase1_desc": "Colete as moedas e evite as bombas! Um campo pequeno, com poucas minas... Perfeito para testar sua sorte.",
+"fase2_title": "Salão das Moedas",
+"fase2_desc": "Colete 5 moedas em um campo expandido. Mais espaço, mas também mais armadilhas escondidas.",
+"fase3_title": "Zona de Perigo",
+"fase3_desc": "As minas estão ficando mais inteligentes. Você consegue encontrar o caminho seguro?",
+"boss_title": "Desafio Final",
+"boss_desc": "Tudo ou nada. Prove que você é o mestre da sorte.",
+"best_score": "Melhor pontuação: {0}/{1}",
+"play_button": "Jogar",
+"back_button": "Voltar",
+
+"victory_title": "Você venceu!",
+"victory_message": "Aposta concluída com sucesso.",
+"victory_button_map": "Voltar ao Mapa",
+"victory_button_next": "Próxima Fase",
+"defeat_title": "Você perdeu!",
+"defeat_message": "O cassino venceu desta vez...",
+"defeat_button_retry": "Tentar de novo",
+"defeat_button_map": "Voltar ao Mapa"
+
 }

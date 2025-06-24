@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title data-i18n="fase1_title">Fase 1 - Primeira Aposta</title>
+  <script src="lang.js"></script>
+  <style>
+    /* Efeitos de animação */
+    @keyframes flicker {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes shadow-pulse {
+      0%, 100% { box-shadow: 0 0 10px gold; }
+      50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translate(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translate(-2px, -2px); }
+      20%, 40%, 60%, 80% { transform: translate(2px, 2px); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { filter: brightness(1); opacity: 0.8; }
+      50% { filter: brightness(1.5); opacity: 1; }
+    }
+
+    @keyframes float-coin {
+      0% { transform: translateY(0) rotate(0deg) scale(0.5); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100vh) rotate(360deg) scale(1); opacity: 0; }
+    }
+
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-5px, 5px); }
+      40% { transform: translate(-5px, -5px); }
+      60% { transform: translate(5px, 5px); }
+      80% { transform: translate(5px, -5px); }
+      100% { transform: translate(0); }
+    }
+
+    @keyframes flicker-light {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+      20%, 22%, 24%, 55% { opacity: 0.3; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Estilos base */
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('fase1.png') no-repeat center center;
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      touch-action: manipulation;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: flicker 5s infinite;
+      position: relative;
+    }
+
+    body.shake {
+      animation: shake 0.5s linear, flicker 5s infinite;
+    }
+
+    /* Painel de jogo */
+    #painel {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px 20px;
+      border-radius: 12px;
+      color: gold;
+      font-size: 1rem;
+      display: flex;
+      gap: 20px;
+      box-shadow: 0 0 10px gold;
+      white-space: nowrap;
+      margin-top: 15px;
+      z-index: 10;
+      position: relative;
+      animation: shadow-pulse 3s infinite;
+    }
+
+    #painel::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, rgba(255,215,0,0) 50%, rgba(255,215,0,0.1) 100%);
+      border-radius: 12px;
+      pointer-events: none;
+    }
+
+    /* Botão de voltar */
+    .btn-voltar {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background: rgba(0, 0, 0, 0.7);
+      color: gold;
+      border: 2px solid gold;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      transition: all 0.2s;
+    }
+
+    .btn-voltar:active {
+      transform: scale(0.9);
+    }
+
+    /* Container principal */
+    #container-jogo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-grow: 1;
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    /* Tabuleiro */
+    #tabuleiro {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 10px;
+      padding: 15px;
+      width: 100%;
+      max-width: 400px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+      position: relative;
+      z-index: 5;
+    }
+
+    .casa {
+      width: 100%;
+      aspect-ratio: 1/1;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.2s;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .casa img {
+      width: 70%;
+      height: 70%;
+      object-fit: contain;
+      display: none;
+      transition: all 0.3s;
+    }
+
+    .casa.revelado img {
+      display: block;
+    }
+
+    .casa.bomba-explodindo img {
+      transform: scale(1.5);
+      filter: brightness(1.5);
+    }
+
+    .casa:active {
+      transform: scale(0.95);
+    }
+
+    /* Power-ups */
+    #power-ups {
+      width: 100%;
+      max-width: 400px;
+      margin-top: 20px;
+      position: relative;
+      z-index: 5;
+    }
+
+    #power-ups-btn {
+      background: rgba(0, 0, 0, 0.7);
+      color: gold;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      padding: 10px;
+      width: 100%;
+      font-size: 1rem;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 0 5px gold;
+      transition: all 0.3s;
+    }
+
+    #power-ups-btn:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    #power-ups-container {
+      display: none;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 0 0 8px 8px;
+      padding: 15px;
+      box-shadow: 0 0 5px gold;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 10px;
+    }
+
+    .power-up {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      filter: grayscale(100%);
+      opacity: 0.7;
+      transition: all 0.3s;
+    }
+
+    .power-up img {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 5px;
+    }
+
+    .power-up span {
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    /* Efeitos visuais */
+    .particle {
+      position: absolute;
+      background: url('moeda_padrao.png') no-repeat center center;
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      opacity: 0.3;
+      z-index: 1;
+      animation: float 10s infinite ease-in-out;
+    }
+
+    .corner-coin {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: url('moeda_padrao.png') no-repeat center center;
+      background-size: contain;
+      opacity: 0.5;
+      z-index: 1;
+      animation: spin 20s linear infinite;
+    }
+
+    .shadow-effect {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.7) 70%);
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 2s;
+    }
+
+    /* Telas de resultado */
+    .result-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.5s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .victory-screen {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .defeat-screen {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .result-content {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 80%;
+      position: relative;
+      z-index: 2;
+    }
+
+    .victory-content {
+      border: 2px solid gold;
+      box-shadow: 0 0 30px gold, 0 0 60px rgba(255, 215, 0, 0.5);
+    }
+
+    .defeat-content {
+      border: 2px solid crimson;
+      box-shadow: 0 0 30px rgba(220, 20, 60, 0.7);
+    }
+
+    .result-title {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px currentColor;
+    }
+
+    .victory-title {
+      color: gold;
+      font-family: 'Arial Black', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      animation: pulse-glow 2s infinite;
+    }
+
+    .defeat-title {
+      color: crimson;
+      font-family: 'Arial Black', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    .result-message {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+      color: white;
+    }
+
+    .result-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .result-button {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 1rem;
+    }
+
+    .result-button:active {
+      transform: scale(0.95);
+    }
+
+    .victory-button {
+      background: gold;
+      color: black;
+    }
+
+    .defeat-button {
+      background: crimson;
+      color: white;
+    }
+
+    .coin-particle {
+      position: absolute;
+      background: url('moeda_padrao.png') no-repeat center center;
+      background-size: contain;
+      width: 30px;
+      height: 30px;
+      z-index: 1;
+      animation: float-coin 5s linear forwards;
+    }
+
+    .bomb-fragment {
+      position: absolute;
+      background: url('bomba_padrao.png') no-repeat center center;
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      z-index: 1;
+      opacity: 0.7;
+    }
+
+    .defeat-glitch {
+      animation: glitch 0.5s linear 2;
+    }
+
+    .flicker-effect {
+      animation: flicker-light 5s infinite;
+    }
+
+    /* Responsividade */
+    @media (max-width: 500px) {
+      #tabuleiro {
+        grid-gap: 8px;
+        padding: 10px;
+      }
+      
+      #painel {
+        font-size: 0.9rem;
+        padding: 8px 15px;
+        gap: 15px;
+      }
+      
+      .btn-voltar {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+      }
+
+      .power-up img {
+        width: 40px;
+        height: 40px;
+      }
+
+      .corner-coin {
+        width: 30px;
+        height: 30px;
+      }
+
+      .result-title {
+        font-size: 2rem;
+      }
+
+      .result-message {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (min-width: 768px) and (max-height: 1024px) {
+      #tabuleiro {
+        max-width: 500px;
+        grid-gap: 15px;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <audio id="bgMusic" loop>
+    <source src="cassino_lounge.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="coinSound">
+    <source src="moeda.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="bombSound">
+    <source src="errobomba.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Tela de Vitória -->
+  <div id="victoryScreen" class="result-screen victory-screen">
+    <div class="result-content victory-content">
+      <span class="fechar-modal-fase" onclick="fecharModalFase('victoryScreen')">&times;</span>
+      <h1 class="result-title victory-title" data-i18n="victory_title">Você venceu!</h1>
+      <p class="result-message" data-i18n="victory_message">Aposta concluída com sucesso.</p>
+      <div class="result-buttons">
+        <button class="result-button victory-button" onclick="backToMap()" data-i18n="victory_button_map">Voltar ao Mapa</button>
+        <button id="nextLevelBtn" class="result-button victory-button" onclick="nextLevel()" data-i18n="victory_button_next">Próxima Fase</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tela de Derrota -->
+  <div id="defeatScreen" class="result-screen defeat-screen">
+    <div class="result-content defeat-content">
+      <span class="fechar-modal-fase" onclick="fecharModalFase('defeatScreen')">&times;</span>
+      <h1 class="result-title defeat-title flicker-effect" data-i18n="defeat_title">Você perdeu!</h1>
+      <p class="result-message" data-i18n="defeat_message">O cassino venceu desta vez...</p>
+      <div class="result-buttons">
+        <button class="result-button defeat-button" onclick="retryLevel()" data-i18n="defeat_button_retry">Tentar de novo</button>
+        <button class="result-button defeat-button" onclick="backToMap()" data-i18n="defeat_button_map">Voltar ao Mapa</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="shadow-effect" id="shadowEffect"></div>
+
+  <button class="btn-voltar" onclick="window.location.href='mapa.html'">←</button>
+  <div id="container-jogo">
+    <div id="painel">
+      <span data-i18n="lives">Vidas</span>: <span id="vidas">2</span> | 
+      <span data-i18n="coins">Moedas</span>: <span id="moedas">0/3</span>
+    </div>
+
+    <div id="tabuleiro"></div>
+
+    <div id="power-ups">
+      <button id="power-ups-btn" data-i18n="powerups_button">Power-ups ▼</button>
+      <div id="power-ups-container">
+        <div class="power-up">
+          <img src="escudo.png" alt="Escudo">
+          <span data-i18n="powerup_shield">Escudo</span>
+        </div>
+        <div class="power-up">
+          <img src="detector_fraco.png" alt="Detector Fraco">
+          <span data-i18n="powerup_detector">Detector Fraco</span>
+        </div>
+        <div class="power-up">
+          <img src="tempo.png" alt="Tempo Extra">
+          <span data-i18n="powerup_time">Tempo Extra</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tabuleiro = document.getElementById("tabuleiro");
+    const vidasSpan = document.getElementById("vidas");
+    const moedasSpan = document.getElementById("moedas");
+    const powerUpsBtn = document.getElementById("power-ups-btn");
+    const powerUpsContainer = document.getElementById("power-ups-container");
+    const bgMusic = document.getElementById("bgMusic");
+    const coinSound = document.getElementById("coinSound");
+    const bombSound = document.getElementById("bombSound");
+    const shadowEffect = document.getElementById("shadowEffect");
+    const body = document.body;
+
+    const totalMoedas = 3;
+    const totalBombas = 1;
+    let vidas = 2;
+    let moedas = 0;
+    let casas = [];
+    let bloqueado = false;
+
+    // Iniciar música de fundo
+    bgMusic.volume = 0.3;
+    bgMusic.play().catch(e => console.log("Autoplay bloqueado, clique para reproduzir"));
+
+    // Criar partículas flutuantes
+    function createParticles() {
+      for (let i = 0; i < 15; i++) {
+        const particle = document.createElement("div");
+        particle.className = "particle";
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.animationDuration = `${5 + Math.random() * 10}s`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        particle.style.transform = `scale(${0.3 + Math.random() * 0.7})`;
+        document.body.appendChild(particle);
+      }
+    }
+
+    // Criar moedas nos cantos
+    function createCornerCoins() {
+      const positions = [
+        { top: '10px', left: '10px' },
+        { top: '10px', right: '10px' },
+        { bottom: '10px', left: '10px' },
+        { bottom: '10px', right: '10px' }
+      ];
+
+      positions.forEach(pos => {
+        const coin = document.createElement("div");
+        coin.className = "corner-coin";
+        Object.assign(coin.style, pos);
+        coin.style.animationDuration = `${15 + Math.random() * 15}s`;
+        document.body.appendChild(coin);
+      });
+    }
+
+    // Efeito de sombra aleatória
+    function randomShadowEffect() {
+      shadowEffect.style.opacity = '0.3';
+      setTimeout(() => {
+        shadowEffect.style.opacity = '0';
+        setTimeout(randomShadowEffect, 10000 + Math.random() * 20000);
+      }, 2000);
+    }
+
+    // Alternar visibilidade dos power-ups
+    powerUpsBtn.addEventListener('click', () => {
+      const isVisible = powerUpsContainer.style.display === 'grid';
+      powerUpsContainer.style.display = isVisible ? 'none' : 'grid';
+      powerUpsBtn.innerHTML = isVisible ? 
+        (window._LANG_DICT?.powerups_button || 'Power-ups') + ' ▼' : 
+        (window._LANG_DICT?.powerups_button || 'Power-ups') + ' ▲';
+    });
+
+    function iniciarFase() {
+      const totalCasas = 4 * 3;
+      const indicesMoedas = [];
+      const indicesBombas = [];
+
+      // Posiciona moedas
+      while (indicesMoedas.length < totalMoedas) {
+        const i = Math.floor(Math.random() * totalCasas);
+        if (!indicesMoedas.includes(i)) indicesMoedas.push(i);
+      }
+
+      // Posiciona bombas
+      while (indicesBombas.length < totalBombas) {
+        const i = Math.floor(Math.random() * totalCasas);
+        if (!indicesMoedas.includes(i) && !indicesBombas.includes(i)) indicesBombas.push(i);
+      }
+
+      // Cria as casas do tabuleiro
+      for (let i = 0; i < totalCasas; i++) {
+        const el = document.createElement("div");
+        el.className = "casa";
+        el.dataset.tipo = indicesMoedas.includes(i) ? "moeda" : indicesBombas.includes(i) ? "bomba" : "vazio";
+        
+        const img = document.createElement("img");
+        if (indicesMoedas.includes(i)) {
+          img.src = "moeda_padrao.png";
+          img.alt = "Moeda";
+        } else if (indicesBombas.includes(i)) {
+          img.src = "bomba_padrao.png";
+          img.alt = "Bomba";
+        } else {
+          img.src = "vazio.png";
+          img.alt = "Vazio";
+        }
+        el.appendChild(img);
+        
+        el.addEventListener("click", () => revelar(el));
+        casas.push(el);
+        tabuleiro.appendChild(el);
+      }
+    }
+
+    function revelar(el) {
+      if (bloqueado || el.classList.contains("revelado")) return;
+
+      el.classList.add("revelado");
+
+      if (el.dataset.tipo === "moeda") {
+        moedas++;
+        moedasSpan.textContent = `${moedas}/${totalMoedas}`;
+        coinSound.currentTime = 0;
+        coinSound.play();
+        
+        // Efeito de partícula ao pegar moeda
+        createCoinParticle(el);
+        
+        if (moedas === totalMoedas) return vitoria();
+      } else if (el.dataset.tipo === "bomba") {
+        vidas--;
+        vidasSpan.textContent = vidas;
+        el.classList.add("bomba-explodindo");
+        bombSound.currentTime = 0;
+        bombSound.play();
+        
+        // Efeito de tremor
+        body.classList.add("shake");
+        setTimeout(() => body.classList.remove("shake"), 500);
+        
+        // Desacelerar a música
+        bgMusic.playbackRate = 0.8;
+        setTimeout(() => { bgMusic.playbackRate = 1.0; }, 2000);
+        
+        if (vidas <= 0) return derrota();
+      }
+    }
+
+    function createCoinParticle(element) {
+      const rect = element.getBoundingClientRect();
+      const particle = document.createElement("div");
+      particle.className = "coin-particle";
+      particle.style.left = `${rect.left + rect.width/2}px`;
+      particle.style.top = `${rect.top + rect.height/2}px`;
+      particle.style.animationDuration = `${2 + Math.random() * 3}s`;
+      particle.style.animationDelay = `${Math.random() * 2}s`;
+      document.body.appendChild(particle);
+      
+      setTimeout(() => particle.remove(), 5000);
+    }
+
+    function createBombFragments(count) {
+      const screen = document.getElementById('defeatScreen');
+      for (let i = 0; i < count; i++) {
+        const fragment = document.createElement('div');
+        fragment.className = 'bomb-fragment';
+        fragment.style.left = `${40 + Math.random() * 20}%`;
+        fragment.style.top = `${30 + Math.random() * 20}%`;
+        fragment.style.transform = `rotate(${Math.random() * 360}deg) scale(0.5)`;
+        screen.appendChild(fragment);
+      }
+    }
+
+    function vitoria() {
+      bloqueado = true;
+      
+      // Mostra tela de vitória
+      const victoryScreen = document.getElementById('victoryScreen');
+      victoryScreen.style.display = 'flex';
+      
+      // Cria partículas de moedas
+      for (let i = 0; i < 20; i++) {
+        createCoinParticle({ getBoundingClientRect: () => ({
+          left: Math.random() * window.innerWidth,
+          top: Math.random() * window.innerHeight,
+          width: 0,
+          height: 0
+        })});
+      }
+      
+      // Salva progresso
+      localStorage.setItem('progresso', JSON.stringify({ fase1: true }));
+      
+      // Esconde o botão de próxima fase se não houver próxima fase
+      const nextLevelBtn = document.getElementById('nextLevelBtn');
+      if (!hasNextLevel()) {
+        nextLevelBtn.style.display = 'none';
+      }
+    }
+
+    function derrota() {
+      bloqueado = true;
+      
+      // Mostra tela de derrota
+      const defeatScreen = document.getElementById('defeatScreen');
+      defeatScreen.style.display = 'flex';
+      defeatScreen.classList.add('defeat-glitch');
+      
+      // Cria efeito de bomba explodida
+      createBombFragments(10);
+      
+      setTimeout(() => defeatScreen.classList.remove('defeat-glitch'), 1000);
+    }
+
+    function backToMap() {
+      window.location.href = 'mapa.html';
+    }
+
+    function retryLevel() {
+      window.location.reload();
+    }
+
+    function nextLevel() {
+      // Implementar lógica para próxima fase
+      window.location.href = 'fase2.html';
+    }
+
+    function hasNextLevel() {
+      // Verificar se há próxima fase disponível
+      return true; // Modificar conforme necessário
+    }
+
+    function fecharModalFase(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    // Atualizar textos quando o idioma mudar
+    window.addEventListener('languageChanged', () => {
+      if (window._LANG_DICT) {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          if (window._LANG_DICT[key]) {
+            el.textContent = window._LANG_DICT[key];
+          }
+        });
+      }
+    });
+
+    // Inicializar efeitos
+    createParticles();
+    createCornerCoins();
+    randomShadowEffect();
+    iniciarFase();
+
+    // Permitir que o usuário inicie a música com um clique
+    document.body.addEventListener('click', function initAudio() {
+      bgMusic.play();
+      document.body.removeEventListener('click', initAudio);
+    }, { once: true });
+
+    // Carregar traduções
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof setLangPage === 'function') {
+        setLangPage();
+      }
+    });
+  </script>
+</body>
+</html>

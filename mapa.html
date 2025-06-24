@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mapa - Cassino das Profundezas</title>
+    <script src="lang.js"></script>
+    <style>
+        :root {
+            --cor-fase: rgba(255, 255, 255, 0.1);
+            --cor-boss: crimson;
+            --cor-texto: white;
+            --cor-destaque: gold;
+            --sombra-padrao: 0 0 15px rgba(255, 255, 255, 0.7);
+            --sombra-boss: 0 0 20px crimson;
+        }
+
+        * {
+            box-sizing: border-box;
+            touch-action: manipulation;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('mapa1.png') no-repeat center center;
+            background-size: cover;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .fase {
+            width: 11vmin;
+            height: 11vmin;
+            min-width: 40px;
+            min-height: 40px;
+            border-radius: 50%;
+            position: absolute;
+            font-weight: bold;
+            color: var(--cor-texto);
+            text-align: center;
+            font-size: 5vmin;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: var(--sombra-padrao);
+            
+            background: var(--cor-fase);
+            transition: transform 0.2s, box-shadow 0.2s;
+            user-select: none;
+        }
+
+        .fase:active {
+            transform: scale(0.95);
+        }
+
+        .boss {
+            background-color: var(--cor-boss);
+            color: yellow;
+            box-shadow: var(--sombra-boss);
+        }
+
+        .fase.completa {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: lime;
+            box-shadow: 0 0 15px lime;
+        }
+
+        #fase1 { top: 80.3%; left: 19%; }
+#fase2 { top: 80.8%; left: 55%; }
+#fase3 { top: 73%; left: 74.3%; }
+#fase4 { top: 65%; left: 42.1%; }
+#fase5 { top: 62.7%; left: 11.1%; }
+#fase6 { top: 51%; left: 10%; }
+#fase7 { top: 45.7%; left: 37.6%; }
+#fase8 { top: 40.8%; left: 74.6%; }
+#fase9 { top: 28.3%; left: 82.3%; }
+#fase10 { top: 18.8%; left: 46.0%; }
+
+        #mapaCaminhos {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal-fase {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-conteudo-fase {
+            background: #222;
+            padding: 20px;
+            width: 90%;
+            max-width: 350px;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 20px var(--cor-destaque);
+            border: 1px solid var(--cor-destaque);
+        }
+
+        .modal-conteudo-fase h2 {
+            color: var(--cor-destaque);
+            margin: 0 0 15px;
+            font-size: 1.5rem;
+        }
+
+        .modal-conteudo-fase p {
+            margin: 15px 0;
+            color: #ddd;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .modal-conteudo-fase button {
+            background: var(--cor-destaque);
+            border: none;
+            padding: 12px 24px;
+            color: black;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: transform 0.2s;
+            width: 80%;
+            max-width: 200px;
+            margin: 10px auto;
+        }
+
+        .modal-conteudo-fase button:active {
+            transform: scale(0.95);
+        }
+
+        .fechar-modal-fase {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #aaa;
+            transition: color 0.2s;
+        }
+
+        .fechar-modal-fase:hover {
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Indicador de progresso */
+        .progresso-fase {
+            font-size: 0.8rem;
+            margin-top: 10px;
+            color: #aaa;
+        }
+
+        @media (max-width: 500px) {
+            .fase {
+                width: 10vmin;
+                height: 10vmin;
+                min-width: 40px;
+                min-height: 40px;
+                font-size: 4vmin;
+            }
+            
+            .modal-conteudo-fase {
+                padding: 15px;
+            }
+            
+            .modal-conteudo-fase h2 {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Botão Voltar */
+.botao-voltar {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    color: var(--cor-destaque);
+    border: 2px solid var(--cor-destaque);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.botao-voltar:hover {
+    background: var(--cor-destaque);
+    color: black;
+    transform: scale(1.1);
+}
+
+.botao-voltar:active {
+    transform: scale(0.95);
+}
+
+@media (max-width: 500px) {
+    .botao-voltar {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+}
+    </style>
+</head>
+<body>
+    <canvas id="mapaCaminhos"></canvas>
+
+    <button class="botao-voltar" onclick="window.location.href='index.html'">←</button>
+
+    <div id="mapaCapitulo">
+        <div class="fase" id="fase1">1</div>
+        <div class="fase" id="fase2">2</div>
+        <div class="fase" id="fase3">3</div>
+        <div class="fase" id="fase4">4</div>
+        <div class="fase" id="fase5">5</div>
+        <div class="fase" id="fase6">6</div>
+        <div class="fase" id="fase7">7</div>
+        <div class="fase" id="fase8">8</div>
+        <div class="fase" id="fase9">9</div>
+        <div class="fase boss" id="fase10">B</div>
+    </div>
+
+    <!-- Modal Fase 1 -->
+    <div id="modalFase1" class="modal-fase">
+        <div class="modal-conteudo-fase">
+            <span class="fechar-modal-fase" onclick="fecharModalFase('modalFase1')">&times;</span>
+            <h2 data-i18n="fase1_title">Fase 1 - Primeira Aposta</h2>
+            <div style="display: flex; justify-content: center; gap: 15px; margin: 15px 0;">
+                <img src="moeda_padrao.png" alt="Moeda" style="width: 50px; height: 50px;">
+                <img src="bomba_padrao.png" alt="Bomba" style="width: 50px; height: 50px;">
+            </div>
+            <p data-i18n="fase1_desc">Colete as moedas e evite as bombas! Um campo pequeno, com poucas minas... Perfeito para testar sua sorte.</p>
+            <div class="progresso-fase" data-i18n="best_score">Melhor pontuação: 3/3</div>
+            <button onclick="iniciarFase1()" data-i18n="play_button">Jogar</button>
+        </div>
+    </div>
+
+    <div id="modalFase2" class="modal-fase">
+        <div class="modal-conteudo-fase">
+            <span class="fechar-modal-fase" onclick="fecharModalFase('modalFase2')">&times;</span>
+            <h2>Fase 2 - Salão das Moedas</h2>
+            <div style="display: flex; justify-content: center; gap: 15px; margin: 15px 0;">
+                <img src="moeda_padrao.png" alt="Moeda" style="width: 50px; height: 50px;">
+                <img src="bomba_padrao.png" alt="Bomba" style="width: 50px; height: 50px;">
+            </div>
+            <p>Colete 5 moedas em um campo expandido. Mais espaço, mas também mais armadilhas escondidas.</p>
+            <div class="progresso-fase">Melhor pontuação: 0/5</div>
+            <button onclick="iniciarFase2()">Jogar</button>
+        </div>
+    </div>
+    <div id="modalFase3" class="modal-fase">
+        <div class="modal-conteudo-fase">
+            <span class="fechar-modal-fase" onclick="fecharModalFase('modalFase3')">&times;</span>
+            <h2>Fase 3 – Rota da Roleta</h2>
+            <div style="display: flex; justify-content: center; gap: 15px; margin: 15px 0;">
+                <img src="moeda_padrao.png" alt="Moeda" style="width: 50px; height: 50px;">
+                <img src="bomba_padrao.png" alt="Bomba" style="width: 50px; height: 50px;">
+            </div>
+            <p>Pegue 6 moedas espalhadas em um tabuleiro maior, mas cuidado: a sorte agora gira mais rápido</p>
+            <div class="progresso-fase">Melhor pontuação: 0/6</div>
+            <button onclick="iniciarFase3()">Jogar</button>
+        </div>
+    </div>
+    <div id="modalFase4" class="modal-fase">
+        <div class="modal-conteudo-fase">
+            <span class="fechar-modal-fase" onclick="fecharModalFase('modalFase4')">&times;</span>
+            <h2>Fase 4 – Truque Travesso</h2>
+            <div style="display: flex; justify-content: center; gap: 15px; margin: 15px 0;">
+                <img src="moeda_padrao.png" alt="Moeda" style="width: 50px; height: 50px;">
+                <img src="bomba_padrao.png" alt="Bomba" style="width: 50px; height: 50px;">
+                <img src="bombafake.png" alt="Bomba" style="width: 50px; height: 50px;">
+            </div>
+            <p>Coletar 6 moedas, com armadilhas reais e armadilhas mentirosas no caminho.</p>
+            <div class="progresso-fase">Melhor pontuação: 0/6</div>
+            <button onclick="iniciarFase4()">Jogar</button>
+        </div>
+    </div>
+    <div id="modalFase5" class="modal-fase">
+        <div class="modal-conteudo-fase">
+            <span class="fechar-modal-fase" onclick="fecharModalFase('modalFase5')">&times;</span>
+            <h2>Fase 5 – Corredor dos Cofres</h2>
+            <div style="display: flex; justify-content: center; gap: 15px; margin: 15px 0;">
+                <img src="moeda_padrao.png" alt="Moeda" style="width: 50px; height: 50px;">
+                <img src="bomba_padrao.png" alt="Bomba" style="width: 50px; height: 50px;">
+            </div>
+            <p>Coletar 7 moedas em um corredor apertado onde as armadilhas estão mais próximas do que parecem.</p>
+            <div class="progresso-fase">Melhor pontuação: 0/6</div>
+            <button onclick="iniciarFase5()">Jogar</button>
+        </div>
+    </div>
+
+    <script>
+        // Verifica e aplica o estado completo das fases
+        function verificarProgresso() {
+            try {
+                const progresso = JSON.parse(localStorage.getItem('progresso')) || {};
+                
+                for (let i = 1; i <= 10; i++) {
+                    const fase = document.getElementById(`fase${i}`);
+                    if (fase && progresso[`fase${i}`]) {
+                        fase.classList.add('completa');
+                    }
+                }
+            } catch (e) {
+                console.error("Erro ao verificar progresso:", e);
+            }
+        }
+
+        // Modal functions
+        function abrirModalFase(id) {
+            document.getElementById(id).style.display = "flex";
+        }
+
+        function fecharModalFase(id) {
+            document.getElementById(id).style.display = "none";
+        }
+
+        function iniciarFase1() {
+            window.location.href = "fase1.html";
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            verificarProgresso();
+            
+            document.getElementById('fase1').addEventListener('click', function() {
+                abrirModalFase('modalFase1');
+            });
+            
+            // Adicionar listeners para outras fases conforme necessário
+        });
+
+        // Redimensiona o canvas quando a janela muda de tamanho
+        window.addEventListener('resize', function() {
+            desenharLinhas();
+        });
+
+        function iniciarFase2() {
+    window.location.href = "fase2.html";
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    verificarProgresso();
+    
+    document.getElementById('fase1').addEventListener('click', function() {
+        abrirModalFase('modalFase1');
+    });
+    
+    document.getElementById('fase2').addEventListener('click', function() {
+        abrirModalFase('modalFase2');
+    });
+});
+        function iniciarFase3() {
+    window.location.href = "fase3.html";
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    verificarProgresso();
+    
+    document.getElementById('fase1').addEventListener('click', function() {
+        abrirModalFase('modalFase1');
+    });
+    
+    document.getElementById('fase2').addEventListener('click', function() {
+        abrirModalFase('modalFase2');
+    });
+    document.getElementById('fase3').addEventListener('click', function() {
+        abrirModalFase('modalFase3');
+    });
+});
+        function iniciarFase4() {
+    window.location.href = "fase4.html";
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    verificarProgresso();
+    
+    document.getElementById('fase1').addEventListener('click', function() {
+        abrirModalFase('modalFase1');
+    });
+    
+    document.getElementById('fase2').addEventListener('click', function() {
+        abrirModalFase('modalFase2');
+    });
+    document.getElementById('fase3').addEventListener('click', function() {
+        abrirModalFase('modalFase3');
+    });
+    document.getElementById('fase4').addEventListener('click', function() {
+        abrirModalFase('modalFase4');
+    });
+});
+        function iniciarFase5() {
+    window.location.href = "fase5.html";
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    verificarProgresso();
+    
+    document.getElementById('fase1').addEventListener('click', function() {
+        abrirModalFase('modalFase1');
+    });
+    
+    document.getElementById('fase2').addEventListener('click', function() {
+        abrirModalFase('modalFase2');
+    });
+    document.getElementById('fase3').addEventListener('click', function() {
+        abrirModalFase('modalFase3');
+    });
+    document.getElementById('fase4').addEventListener('click', function() {
+        abrirModalFase('modalFase4');
+    });
+    document.getElementById('fase5').addEventListener('click', function() {
+        abrirModalFase('modalFase5');
+    });
+});
+
+// Atualiza o título do mapa quando o idioma muda
+function atualizarMapaUI() {
+  if (window._LANG_DICT) {
+    document.title = window._LANG_DICT['map_title'] || 'Mapa - Terras da Sorte';
+  }
+}
+
+// Adicione esta linha no final do setLangPage
+document.addEventListener('DOMContentLoaded', function() {
+  setLangPage().then(() => {
+    atualizarMapaUI();
+  });
+});
+    </script>
+
+    <script src="historia.js"></script>
+</body>
+</html>

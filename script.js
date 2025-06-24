@@ -82,7 +82,21 @@ function atualizarUI() {
   elementos.contadorVisao.textContent = progresso.powerUps.visaoAguia;
   elementos.btnVisaoAguia.style.display = progresso.powerUps.visaoAguia > 0 ? 'flex' : 'none';
   elementos.btnVisaoAguia.setAttribute('data-count', progresso.powerUps.visaoAguia);
-}
+
+    // Atualiza o botão visão de águia
+    const btnVisao = elementos.btnVisaoAguia;
+    if (progresso.powerUps.visaoAguia > 0) {
+      btnVisao.style.display = 'flex';
+      btnVisao.innerHTML = `
+        <img src="aguia.png" alt="Visão de Águia">
+        <span class="contador">${progresso.powerUps.visaoAguia}</span>
+      `;
+    } else {
+      btnVisao.style.display = 'none';
+    }
+  }
+  
+
 
 function gerarBombas(qtd) {
   const total = 25;
@@ -326,6 +340,13 @@ function ativarVisaoAguia() {
   progresso.powerUps.visaoAguia--;
   localStorage.setItem('progresso', JSON.stringify(progresso));
   atualizarUI();
+  
+  // Mostra a imagem da águia no botão
+  const btnVisao = document.getElementById('btn-visao-aguia');
+  btnVisao.innerHTML = `
+    <img src="aguia.png" alt="Visão de Águia">
+    <span class="contador">${progresso.powerUps.visaoAguia}</span>
+  `;
   
   mostrarBombas();
   setTimeout(() => {
